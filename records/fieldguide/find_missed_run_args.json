@@ -1,0 +1,17 @@
+{
+ "data": "/Users/automeris/Desktop/Megabug/fg-arthropods-v1",
+ "format": "fieldguide",
+ "model": "/Users/automeris/Documents/GitHub/Mothbot_Process/trained_models/MBD-1-1.pt",
+ "out": "/Users/automeris/Desktop/Megabug/fieldguide_missed",
+ "subsets": null,
+ "limit": null,
+ "imgsz": 1600,
+ "conf": 0.15,
+ "max_det": 3000,
+ "tile": 3200,
+ "tile_trigger": 1.25,
+ "overlap": 0.15,
+ "batch": 4,
+ "match_iou": 0.3,
+ "device": null
+}

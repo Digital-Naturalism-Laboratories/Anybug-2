@@ -1,0 +1,12 @@
+# Datasets, weights and run outputs live outside the repo (see README "Data locations")
+*.pt
+*.onnx
+*.jpg
+*.jpeg
+*.png
+*.zip
+*.tar
+runs/
+crops/
+__pycache__/
+.DS_Store

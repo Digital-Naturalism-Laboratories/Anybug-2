@@ -1,0 +1,384 @@
+{
+  "name": "fg-arthropods-v1",
+  "version": "v1.0.0",
+  "built_at": "2026-10-12T19:39:12Z",
+  "build_commit": "aba9a998b",
+  "sources": [
+    {
+      "source_set": "butterflies-fg-medsmall-4200",
+      "rows": 3520,
+      "kept": 3518,
+      "duplicates_dropped": 2,
+      "missing_images": 0
+    },
+    {
+      "source_set": "invertebrates-fg-moths-small",
+      "rows": 5847,
+      "kept": 5822,
+      "duplicates_dropped": 25,
+      "missing_images": 0
+    },
+    {
+      "source_set": "invertebrates-fg-moths-medsmall-10000",
+      "rows": 9986,
+      "kept": 9974,
+      "duplicates_dropped": 12,
+      "missing_images": 0
+    },
+    {
+      "source_set": "invertebrates-fg-other-smallmed",
+      "rows": 1332,
+      "kept": 1328,
+      "duplicates_dropped": 4,
+      "missing_images": 0
+    }
+  ],
+  "counts": {
+    "rows": 20642,
+    "group": {
+      "butterfly": 3518,
+      "moth": 15796,
+      "other_arthropod": 1017,
+      "mollusk_worm": 311
+    },
+    "split": {
+      "train": 18576,
+      "val": 2066
+    },
+    "bucket": {
+      "small": 6058,
+      "medsmall": 14580,
+      "medlarge": 4
+    },
+    "license_class": {
+      "all-rights-reserved": 1332,
+      "cc-by": 241,
+      "cc-by-nc": 3352,
+      "cc-by-nc-nd": 99,
+      "cc-by-nc-sa": 82,
+      "cc-by-nd": 3,
+      "cc-by-sa": 229,
+      "cc0": 24,
+      "missing": 3523,
+      "unspecified": 11757
+    },
+    "source_set": {
+      "butterflies-fg-medsmall-4200": 3518,
+      "invertebrates-fg-moths-medsmall-10000": 9974,
+      "invertebrates-fg-moths-small": 5822,
+      "invertebrates-fg-other-smallmed": 1328
+    },
+    "group_by_split": {
+      "butterfly": {
+        "train": 3144,
+        "val": 374
+      },
+      "moth": {
+        "train": 14228,
+        "val": 1568
+      },
+      "other_arthropod": {
+        "train": 923,
+        "val": 94
+      },
+      "mollusk_worm": {
+        "val": 30,
+        "train": 281
+      }
+    }
+  },
+  "bytes": 22274267432,
+  "rules": {
+    "dedupe": "sha256 of the image file; the row with the lowest photo_id is kept",
+    "image_key": "images/<sha256[:2]>/<sha256>.jpg",
+    "bucket_edges": {
+      "small": [
+        0.0,
+        0.1
+      ],
+      "medsmall": [
+        0.1,
+        0.25
+      ],
+      "medlarge": [
+        0.25,
+        0.5
+      ],
+      "large": [
+        0.5,
+        0.75
+      ],
+      "full": [
+        0.75,
+        null
+      ]
+    },
+    "groups": "butterfly = under Butterflies; moth = other Lepidoptera; other_arthropod = other Arthropods; mollusk_worm = Mollusks or Worms",
+    "box_kind": "user_crop: the square crop the user drew at upload"
+  },
+  "split_rule": {
+    "existing_rows": "each row keeps the split of its source set",
+    "future_rows": "md5(\"fg-arthropods-v1:\" + photo_id) < 0.1 -> val"
+  },
+  "duplicates_dropped": [
+    {
+      "sha256": "220968e25e15959f7458047e4745aef7565008aaaac60f311c7b7254aabaeeee",
+      "kept_photo_id": "58911225fd89785d9f87a283",
+      "dropped_photo_id": "5891136ffd89785da6a89d5b",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "480d2daaa1207550227e014c043f2f08bb766d1b43660ac6fc43ea7e5ac8d76d",
+      "kept_photo_id": "597e118cfd89785c595426f5",
+      "dropped_photo_id": "597e11fbfd89785ca25426ca",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "480d2daaa1207550227e014c043f2f08bb766d1b43660ac6fc43ea7e5ac8d76d",
+      "kept_photo_id": "597e118cfd89785c595426f5",
+      "dropped_photo_id": "597e122afd89785ca25426e6",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "45842ae3cd85a1f140fa15694a2bff924d20797738c3edb3fff0209f23900686",
+      "kept_photo_id": "59760be0fd89780731021d22",
+      "dropped_photo_id": "5983a406fd8978036c3fe855",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "c574cb88cc307158bcdd31bc0aa62a68508a1858fa58e602c20f2b4cabc4b799",
+      "kept_photo_id": "59922f1dfd89787440739080",
+      "dropped_photo_id": "59923557fd89787440739216",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "62eba71cb132a1900cef6f34c9a78d3a127d79e1104e75c8d0d3f4465f117efc",
+      "kept_photo_id": "5a7490d48f0e375a8c05f87c",
+      "dropped_photo_id": "5a7498c88f0e37336f05f8b0",
+      "dropped_source_set": "invertebrates-fg-other-smallmed"
+    },
+    {
+      "sha256": "ba3bdde2052ad54c58b0c9cc50f701c54e32b3f3750f09b4793e3a0eee1403d7",
+      "kept_photo_id": "5a7490c12110df612ba235f9",
+      "dropped_photo_id": "5a749b208f0e37336f05f8b8",
+      "dropped_source_set": "invertebrates-fg-other-smallmed"
+    },
+    {
+      "sha256": "4e10941348f2193472c07c31b81320e30345b8dfdde4d6e3c2b2f7a8a6266010",
+      "kept_photo_id": "5aac81d32110df2d6cbf85e3",
+      "dropped_photo_id": "5aae86c48f0e37723511752f",
+      "dropped_source_set": "butterflies-fg-medsmall-4200"
+    },
+    {
+      "sha256": "3afbda8a64fab38ce6c7e8d996a7f5f980a2b1727f3cd3276f752ac30007e46c",
+      "kept_photo_id": "5acbb6982110df28e8625f06",
+      "dropped_photo_id": "5acbb69d2110df49bf0ac471",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "4c587bad47c08f39f16365ee3c26c3e44d65606a2790314d621e3b10010cc3a7",
+      "kept_photo_id": "5b073620929d3d5471ff9b4e",
+      "dropped_photo_id": "5b0bc95b929d3d63fbbb043a",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "c72cc9fbc615815951764d99f56b0fa9523603ebfdb1fb6fb33c26c9903def63",
+      "kept_photo_id": "5b0b7f39929d3d63fbb887f0",
+      "dropped_photo_id": "5b0ed005929d3d384e5e1b64",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "e887b6eba5b9e347970814e9e72ed3370c6634d41b8d121784108dcbe9321ca0",
+      "kept_photo_id": "5b452d072110df6dec5d898e",
+      "dropped_photo_id": "5b466bce2110df1161ef7651",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "823a728e5944290ed7624007b620f75c5adec27f0040f9a5ffd40bd1cb7e44fe",
+      "kept_photo_id": "5b32bbef8f0e37639c905738",
+      "dropped_photo_id": "5b51663f2110df4c5684ab2d",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "bfda9d935d5f0984e8aadaf37e694540a2d4c9f2cda5d76c00b37863c1cb1515",
+      "kept_photo_id": "5b66c4ae2110df740f0cf550",
+      "dropped_photo_id": "5b6709802110df2f908437cd",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "ecc63c703a0d6fa19f2062d659217d050964ae9e4f75ee04efb6bef8bb307a41",
+      "kept_photo_id": "5ba05072929d3d38c674463f",
+      "dropped_photo_id": "5ba05076929d3d38c6744640",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "100ad18c05de3678d23560ec1300dd3cb67ff37505a4d46fae2a03328b93c022",
+      "kept_photo_id": "5c219d568f0e37653698e58b",
+      "dropped_photo_id": "5c219da02110df46bb80b5f3",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "100ad18c05de3678d23560ec1300dd3cb67ff37505a4d46fae2a03328b93c022",
+      "kept_photo_id": "5c219d568f0e37653698e58b",
+      "dropped_photo_id": "5c219ddb8f0e377f23e49b6f",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "100ad18c05de3678d23560ec1300dd3cb67ff37505a4d46fae2a03328b93c022",
+      "kept_photo_id": "5c219d568f0e37653698e58b",
+      "dropped_photo_id": "5c219e032110df21fcc5ebb1",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "9429bf0225b14131a1f831e31ac6062f5f5fcfbfaa3e14291f5ae72d2d8c3eaf",
+      "kept_photo_id": "5c1be6a98f0e3760894a5bff",
+      "dropped_photo_id": "5c2d48788f0e370f68cb626e",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "9bd407ef33d7ee4b71dbb3a26146e6cefcc5aab73a873ce72465d94878b51071",
+      "kept_photo_id": "5c88371b3c12ef33008610f1",
+      "dropped_photo_id": "5c8837553c12ef33008610f2",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "c474e46f092c539cc27e333a38d43587d056822dabe2427fa7ab7aa23a3d75d2",
+      "kept_photo_id": "5d20c1bf748e5b791d5fb6b8",
+      "dropped_photo_id": "5d20c1db748e5b73167402fa",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "3747cba02e53a339cdfbdd721858114f60b63651fefb2e62f37474c607cf272c",
+      "kept_photo_id": "5d27ee44748e5b6238b37d8e",
+      "dropped_photo_id": "5d2f458d3c12ef12a6fb4b5a",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "374c30031dcc5cc4c524d0c99cd43bdd9fe996dd1695d74a5efb38a19c78b25b",
+      "kept_photo_id": "5d863aad748e5b15be854ac7",
+      "dropped_photo_id": "5d863adc3c12ef4e72ec3753",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "374c30031dcc5cc4c524d0c99cd43bdd9fe996dd1695d74a5efb38a19c78b25b",
+      "kept_photo_id": "5d863aad748e5b15be854ac7",
+      "dropped_photo_id": "5d8694183c12ef568bc93540",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "05366566fbcc42e37097fbc478e8ac397d60752ae785f570b35985533fe78a66",
+      "kept_photo_id": "5d9108833c12ef48e0f8a778",
+      "dropped_photo_id": "5d92ae3d748e5b1c8075a510",
+      "dropped_source_set": "invertebrates-fg-other-smallmed"
+    },
+    {
+      "sha256": "4db67618534fcda471d0c089336e5e870839d392b23aafd934bae471cacbb577",
+      "kept_photo_id": "5c931a6e929d3d610b7e1048",
+      "dropped_photo_id": "5d95fd7b3c12ef2609953be9",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "3818beec5694c49bc49095107d974d24dd08b3b4a7531bc60e02ae296e7916af",
+      "kept_photo_id": "5e677e39748e5b7c6e38085f",
+      "dropped_photo_id": "5e677ff9748e5b7c6e380860",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "13894e37bd66e32ce5cd10ac7951cd63f6bb9a4c58a67961e3240b165cacfc46",
+      "kept_photo_id": "5e678221748e5b7c0e970053",
+      "dropped_photo_id": "5e6784a03c12ef41f4e7a8b1",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "b0bf086ee840adbab144834ff4c21fbb5df5754f5d5d7bd955e000a7d0438746",
+      "kept_photo_id": "5ecef9913c12ef54cb0f8a15",
+      "dropped_photo_id": "5ecef9e3748e5b0a5918d2fe",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "b0bf086ee840adbab144834ff4c21fbb5df5754f5d5d7bd955e000a7d0438746",
+      "kept_photo_id": "5ecef9913c12ef54cb0f8a15",
+      "dropped_photo_id": "5ecf0466748e5b098b6820af",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "57ccb1959d0b135db7864c0c2057084079f6d9363e9a801275f0b66801d1789a",
+      "kept_photo_id": "5eda7830748e5b1d15bdd2a8",
+      "dropped_photo_id": "5eda78753c12ef67ed6e52f1",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "6bdccfe9caf12762940e0fb62bdd2768c51445736a853920024fa41e8ec3c005",
+      "kept_photo_id": "5f12e81b3c12ef5b5f69189c",
+      "dropped_photo_id": "5f12e838748e5b09e6ae01c9",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "8f5fd4f864b9fdc688d37bac62fcf6e5f17e9179589f12614b1de39b2036de6f",
+      "kept_photo_id": "5f4dc7c8748e5b4e7a3d8724",
+      "dropped_photo_id": "5f4faade3c12ef3aebd20dd4",
+      "dropped_source_set": "invertebrates-fg-other-smallmed"
+    },
+    {
+      "sha256": "3bb60dbd59b6320992bb28ebdde8e17faa591185b234aa3bbed3838a4a5dfa82",
+      "kept_photo_id": "5f9675a63c12ef3b741b4703",
+      "dropped_photo_id": "5fa6321e748e5b376a325da4",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "131cd163772a05a3d6cbc6333f885f185f1a85eac4c3fbb8f35abfab6a6adef9",
+      "kept_photo_id": "60572130fe8a607fee1b949d",
+      "dropped_photo_id": "60572130fe8a607fee1b9566",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "3b6a721d40a95b469b657c4bc5ce648527031dd1ed61db5d1ee019ccb13d1b5a",
+      "kept_photo_id": "60bc27d13c12ef6c6686a448",
+      "dropped_photo_id": "60bc27fd3c12ef6cabc295c4",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "8d24393d37449f185a9f7f139ca98aab7be1021afa80c1fb4cb7707e6f4f499e",
+      "kept_photo_id": "60c1e7d43c12ef5bd9a8d821",
+      "dropped_photo_id": "60c1e82d3c12ef5c7cdc2724",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "25d2590757518a357378d6eabeac667133b2c822cc7dc986441d8875c2e114a7",
+      "kept_photo_id": "6145e4453c12ef13346a609c",
+      "dropped_photo_id": "61606d733c12ef79758e9e68",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "19e13643bf1181ae43b5d96546949eb4e1022f158963106ff1b2b923bc518416",
+      "kept_photo_id": "61f163043c12ef528f565591",
+      "dropped_photo_id": "61f163ee3c12ef54a71bffd4",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "1e464ff1e033250d1fff5e8f77ac29b8cc9dacfb352623532ff5308415281b62",
+      "kept_photo_id": "6100774b3c12ef76e929c15e",
+      "dropped_photo_id": "6292b24836efdad973c3c89e",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "bc40886b5e1ca8b5e1e93b1be7a7e87c7908263f8b3430aed308afde5089917b",
+      "kept_photo_id": "648e511374dd06b46ba874c1",
+      "dropped_photo_id": "648e515f32c5e2fde867a446",
+      "dropped_source_set": "invertebrates-fg-moths-medsmall-10000"
+    },
+    {
+      "sha256": "4267768097916976a4b1b691319548fd91875f2d0842e570e6cdbdcf3a07213f",
+      "kept_photo_id": "6652632ef8bee94686735672",
+      "dropped_photo_id": "6653d819dc767c9e36c17dff",
+      "dropped_source_set": "invertebrates-fg-moths-small"
+    },
+    {
+      "sha256": "f843204d5e4eae83cd7bbf476506a8b7c9a258d67320a9b1ae1c3c6b09416f5e",
+      "kept_photo_id": "66ca41d5a6da531fd344a79f",
+      "dropped_photo_id": "66ca421d4f5ba19eee6cdab2",
+      "dropped_source_set": "butterflies-fg-medsmall-4200"
+    }
+  ],
+  "missing_images": []
+}

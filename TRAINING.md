@@ -1,0 +1,100 @@
+# Training
+
+## The sets
+
+| Set | Sources | Status |
+|---|---|---|
+| **Mothbox** | Mothbox MBD-1.1 (its own train/val/test split) | trained `s` at 1600; `m` next |
+| **TestFlat_150MB** | 6 Mothbox photos + 2 per flat-bug flat subset (`scripts/train/make_testflat_sample.py`) | built; used to test the cluster workflow |
+| **Flat** | Mothbox + flat-bug `flat` | after the Fieldguide review |
+| **Mixed** | Flat + flat-bug `other` + YOLO-Fast + Fieldguide | after the Fieldguide review |
+
+Flat and Mixed are built with `scripts/train/collect_yolo_training_data.py`. That script:
+- re-splits sources 80/10/10;
+- keeps tiles of one photo (`_x<X>_y<Y>`) in the same split;
+- writes a `data.yaml` with **no `path:`**, so the folder can be copied anywhere.
+
+Note that it re-splits Mothbox too. To compare against MBD-1-1 on the same test photos, add an
+option that keeps a source's existing split, or evaluate on the Mothbox test split separately.
+
+## Cluster: ami-workspace-02-gpu
+
+- **Access:** `ssh ami-workspace-02-gpu` (via the `ami-bastion` jump host; key `~/.ssh/andy`).
+- **GPU:** NVIDIA H100L-1-24C, a MIG 1g.24gb vGPU slice. About 23.8 GB of memory and about 1/7 of an H100's
+  compute. It's shared (another user's BioCLIP process was using ~0.5 GB). Driver 580, CUDA 13.0. 6 CPUs.
+- **Disks:** the root disk `/` (which holds `~`) is only 20 GB and was full. Everything lives on the
+  shared mount `/mnt/ami-training` (1 TB):
+  - scripts + venv + runs: `/mnt/ami-training/andy/`
+  - data: `/mnt/ami-training/detector/sources/incoming-andy/`
+- **One-time setup:**
+  ```
+  python3 -m venv /mnt/ami-training/andy/venv
+  # copy scripts/cluster/env.sh to /mnt/ami-training/andy/env.sh, then:
+  source /mnt/ami-training/andy/env.sh
+  pip install -U pip && pip install ultralytics      # pulls torch cu130
+  ```
+- **Every session:** `tmux new -s <name>` (or `tmux attach -t <name>`), then `source /mnt/ami-training/andy/env.sh`.
+  - Detach with Ctrl-b d. Turn on scrolling with `tmux set -g mouse on`.
+  - Don't press Ctrl-C in the training window unless you mean to stop it.
+- **Uploading from the Mac** (Andrew's home internet is unstable; re-run to resume):
+  ```
+  rsync -av --exclude 'runs/' --exclude '__pycache__/' --exclude '.DS_Store' \
+    <this repo>/scripts/ ami-workspace-02-gpu:/mnt/ami-training/andy/
+  rsync -av -e "ssh -o ServerAliveInterval=20 -o ServerAliveCountMax=6" --exclude '.DS_Store' \
+    ~/Desktop/Megabug/flatbug_yolo_obb ~/Desktop/Megabug/yolofast_yolo_obb \
+    ami-workspace-02-gpu:/mnt/ami-training/detector/sources/incoming-andy/
+  ```
+
+### Gotchas we hit
+
+1. **No space left on device** during `pip install`: the root disk is full. Use the venv and caches on the mount (`env.sh`).
+2. **`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True` breaks training** on this vGPU
+   (`CUDA_ERROR_NOT_SUPPORTED … cuMemAddressReserve`). Don't set it.
+3. **Ultralytics edits datasets in place.** It rewrites corrupt JPEGs and writes `labels/*.cache`, and
+   `train_yolo_obb.py`'s pre-scan *moves* corrupt images to `quarantine/`. Train only from your
+   own copies, never the shared `detector/sources/<other>` folders.
+4. **CPU-bound with full-size Mothbox photos.** At full size an epoch took ~12 min, with the GPU waiting on JPEG decoding. With
+   images shrunk to 2048 px (`scripts/cluster/shrink_images.py`) it takes **~1 min/epoch**. Ultralytics resizes to imgsz on load anyway,
+   so the model input is the same.
+5. **AutoBatch (`--batch -1`) is too cautious.** It picked 3, but real use at batch 3 was ~7 GB. For `s` at 1600, `--batch 6` peaks around 19–20 GB.
+6. **`CUDA out of memory in TaskAlignedAssigner …` warnings** on photos with >1,000 insects are harmless:
+   Ultralytics redoes the label matching one image at a time and carries on. Only a `RuntimeError` is fatal.
+7. **`lr0` is ignored.** `train_yolo_obb.py`'s `lr0=0.005` is ignored because `optimizer=auto` (it picks SGD lr 0.01 for long runs).
+   This was also true for MBD-1-1.
+
+## Commands
+
+**TestFlat (workflow check):**
+```
+python3 train_yolo_obb.py --data /mnt/ami-training/detector/sources/incoming-andy/TestFlat_150MB/data.yaml \
+  --model s --imgsz 1600 --epochs 5 --batch -1 --mosaic 1.0 --workers 6 \
+  --project /mnt/ami-training/andy/runs --name testflat_smoke
+```
+
+**Mothbox:**
+```
+python3 shrink_images.py --src .../incoming-andy/mothbox_mbd11 --dst .../incoming-andy/mothbox_mbd11_2048   # once
+python3 train_yolo_obb.py --data /mnt/ami-training/detector/sources/incoming-andy/mothbox_mbd11_2048/data.yaml \
+  --model s --imgsz 1600 --epochs 200 --batch 6 --mosaic 1.0 --workers 6 \
+  --project /mnt/ami-training/andy/runs --name mothbox_s1600_fast
+# m: --model m --batch 3 --name mothbox_m1600
+```
+
+**Test-split comparison:**
+```
+yolo val task=obb split=test imgsz=1600 batch=4 data=<…>/mothbox_mbd11_2048/data.yaml model=<weights> \
+  project=/mnt/ami-training/andy/runs name=test_<label>
+```
+
+## Choosing parameters (reasoning, 2026-10-14)
+
+- **Model size:** train `s`, `m` and `l` and compare accuracy against laptop speed in Mothbot Process.
+  Compute is roughly `s` 1×, `m` ~2.5×, `l` ~3×, `x` ~7× (`x` is too slow for laptops).
+- **Mosaic:** on (1.0). Ultralytics turns it off for the last 10 epochs. The script's `scale=0.9` plus mosaic can shrink
+  20 px insects to a few pixels; if small-insect recall suffers, try scale 0.5 (needs a new flag).
+- **imgsz:** keep 1600, matching Process; laptop cost grows with the square of the size. Mothbox's smallest 10% of boxes are ≤11 px at 1600
+  (~14 px at 2048). A 2048 experiment is worth doing once, but note that the ONNX export fixes the input size.
+
+## Results
+
+See `records/results/`.
