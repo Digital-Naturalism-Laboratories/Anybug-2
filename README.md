@@ -36,8 +36,9 @@ scripts/cluster/  env.sh for the GPU VM, shrink_images.py
 ```
 
 `scripts/train/collect_yolo_training_data.py` and `train_yolo_obb.py` were copied on 2026-10-15 from
-`Mothbox/AI/training_scripts/`, and `scripts/refine/*` from `Mothbox/AI/training_scripts/megabug/`,
-where they were written. **Edit them here from now on**, or keep both copies in sync.
+`Mothbox/AI/training_scripts/` (which still has its own copies; keep the two in sync or edit here).
+`scripts/refine/*` were written in `Mothbox/AI/training_scripts/megabug/`, which was removed on
+2026-10-15; this repo is now their only home.
 
 ## Data locations
 

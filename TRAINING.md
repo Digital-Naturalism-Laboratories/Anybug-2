@@ -4,7 +4,7 @@
 
 | Set | Sources | Status |
 |---|---|---|
-| **Mothbox** | Mothbox MBD-1.1 (its own train/val/test split) | trained `s` at 1600; `m` next |
+| **Mothbox** | Mothbox MBD-1.1 (its own train/val/test split) | trained `s` and `m` at 1600 — `s` wins (see records/results) |
 | **TestFlat_150MB** | 6 Mothbox photos + 2 per flat-bug flat subset (`scripts/train/make_testflat_sample.py`) | built; used to test the cluster workflow |
 | **Flat** | Mothbox + flat-bug `flat` | after the Fieldguide review |
 | **Mixed** | Flat + flat-bug `other` + YOLO-Fast + Fieldguide | after the Fieldguide review |
@@ -94,6 +94,28 @@ yolo val task=obb split=test imgsz=1600 batch=4 data=<…>/mothbox_mbd11_2048/da
   20 px insects to a few pixels; if small-insect recall suffers, try scale 0.5 (needs a new flag).
 - **imgsz:** keep 1600, matching Process; laptop cost grows with the square of the size. Mothbox's smallest 10% of boxes are ≤11 px at 1600
   (~14 px at 2048). A 2048 experiment is worth doing once, but note that the ONNX export fixes the input size.
+
+## Energy and carbon
+
+`train_yolo_obb.py` prints an energy estimate after training and saves `energy_report.json` in the
+run folder (added 2026-10-15).
+
+- **GPU:** live power from NVML when the driver exposes it; otherwise estimated as board watts × the share
+  of the card. Our MIG 1g slice can't report power (`nvidia-smi` shows N/A), so it's estimated as
+  350 W × 26/132 SMs ≈ 69 W.
+- **Host:** 10 W per visible CPU core (60 W on the cluster VM). Apple Silicon: GPU 20 W + host 15 W.
+- **Data-centre overhead:** PUE 1.2 on servers, 1.0 on a laptop.
+- **Grid carbon:** default `--grid-gco2-per-kwh 480` (≈ world average). The cluster is at BCNET (Vancouver, BC), and BC's
+  grid is mostly hydro (on the order of 10–20 g/kWh), so pass a BC figure for real numbers.
+- **Options:** `--gpu-watts`, `--host-watts`, `--pue`, `--grid-gco2-per-kwh`.
+
+Rough figures for the runs so far, with these defaults:
+
+| Run | Hours | ≈ kWh | ≈ kg CO2e at 480 g | ≈ g CO2e at 15 g (BC) |
+|---|---|---|---|---|
+| s1600 (cluster) | 3.3 | 0.5 | 0.25 | 8 |
+| m1600 (cluster) | 5.5 | 0.85 | 0.4 | 13 |
+| MBD-1-1 (Mac, MPS) | ~31 | 1.1 | 0.5 | (Mac's own grid) |
 
 ## Results
 

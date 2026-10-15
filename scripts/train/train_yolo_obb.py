@@ -344,6 +344,131 @@ def scan_dataset_for_corrupt_images(data_yaml: Path) -> int:
 
 
 # ---------------------------------------------------------------------------
+# Energy and carbon estimate
+# ---------------------------------------------------------------------------
+
+# Board power (W) of common training GPUs running flat out, used when the driver
+# can't report live power (e.g. MIG / vGPU slices). Matched by substring of the name.
+GPU_BOARD_WATTS = {"H100": 350, "H200": 600, "A100": 300, "A6000": 300, "L40": 300,
+                   "A40": 300, "V100": 300, "4090": 450, "3090": 350, "T4": 70}
+# Streaming multiprocessors on the full card, to scale a MIG slice's share of the power.
+GPU_FULL_SMS = {"H100": 132, "H200": 132, "A100": 108}
+
+
+class EnergyMeter:
+    """Energy used by one training session, and its carbon.
+
+    GPU: measured by polling NVML (live board power, integrated over time) when the
+    driver allows it; otherwise estimated as board watts x the share of the card this
+    process has (for a MIG slice: its SMs / the full card's SMs). Apple Silicon (MPS)
+    and CPU training have no reliable power readout here, so they are estimated.
+    Host (CPU, RAM, disks, fans): estimated as --host-watts.
+    Total = (GPU + host) x PUE (data-centre cooling/overhead), carbon = total x grid
+    intensity. Every assumption is printed and saved, so the numbers can be redone
+    with better figures later.
+    """
+
+    def __init__(self, device, args):
+        self.args, self.device = args, device
+        self.samples, self.measured, self.note = [], False, ""
+        self._stop, self._thread, self._handle = None, None, None
+        self.gpu_name, self.est_gpu_watts = self._gpu_estimate(device)
+        import os
+        server = device not in ("cpu", "mps")
+        self.pue = args.pue if args.pue is not None else (1.2 if server else 1.0)
+        self.host_watts = (args.host_watts if args.host_watts is not None
+                           else 15.0 if device == "mps" else 10.0 * (os.cpu_count() or 4))
+
+    def _gpu_estimate(self, device):
+        if self.args.gpu_watts is not None:
+            return "user-set", self.args.gpu_watts
+        try:
+            import torch
+            if device not in ("cpu", "mps") and torch.cuda.is_available():
+                name = torch.cuda.get_device_name(0)
+                board = next((w for k, w in GPU_BOARD_WATTS.items() if k in name), 300)
+                share = 1.0
+                full = next((n for k, n in GPU_FULL_SMS.items() if k in name), None)
+                if "MIG" in name and full:
+                    share = min(1.0, torch.cuda.get_device_properties(0).multi_processor_count / full)
+                self.note = f"{board} W board x {share:.2f} of the card"
+                return name, board * share
+        except Exception:
+            pass
+        if device == "mps":
+            self.note = "Apple Silicon GPU under sustained load, rough guess"
+            return "Apple Silicon (MPS)", 20.0
+        return "none (CPU)", 0.0
+
+    def start(self):
+        import threading
+        self.t0 = time.time()
+        if self.device in ("cpu", "mps"):
+            return
+        try:
+            import pynvml  # ships with torch's CUDA wheels as nvidia-ml-py
+            pynvml.nvmlInit()
+            self._handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+            pynvml.nvmlDeviceGetPowerUsage(self._handle)  # raises if not supported (MIG/vGPU)
+            self.measured = True
+        except Exception as e:
+            self.note += f"; live power not readable ({type(e).__name__})"
+            return
+        self._stop = threading.Event()
+
+        def poll():
+            while not self._stop.is_set():
+                try:
+                    self.samples.append((time.time(), pynvml.nvmlDeviceGetPowerUsage(self._handle) / 1000.0))
+                except Exception:
+                    pass
+                self._stop.wait(self.args.power_poll_s)
+
+        self._thread = threading.Thread(target=poll, daemon=True)
+        self._thread.start()
+
+    def stop(self):
+        self.t1 = time.time()
+        if self._thread:
+            self._stop.set()
+            self._thread.join(timeout=5)
+
+    def report(self, save_dir=None):
+        hours = (self.t1 - self.t0) / 3600
+        if self.measured and len(self.samples) >= 2:
+            gpu_wh = sum((t2 - t1) * (w1 + w2) / 2 for (t1, w1), (t2, w2) in zip(self.samples, self.samples[1:])) / 3600
+            gpu_how = f"measured (NVML, {len(self.samples)} samples, mean {gpu_wh / max(hours, 1e-9):.0f} W)"
+        else:
+            gpu_wh = self.est_gpu_watts * hours
+            gpu_how = f"estimated at {self.est_gpu_watts:.0f} W ({self.note.strip('; ')})"
+        host_wh = self.host_watts * hours
+        kwh = (gpu_wh + host_wh) * self.pue / 1000
+        g_co2 = kwh * self.args.grid_gco2_per_kwh
+        rep = {
+            "hours": round(hours, 3), "gpu": self.gpu_name, "gpu_kwh": round(gpu_wh / 1000, 3),
+            "gpu_method": gpu_how, "host_watts": self.host_watts, "host_kwh": round(host_wh / 1000, 3),
+            "pue": self.pue, "total_kwh": round(kwh, 3),
+            "grid_gco2_per_kwh": self.args.grid_gco2_per_kwh, "kg_co2e": round(g_co2 / 1000, 3),
+            "note": "Training session only (not export/validation-after/scan). Estimates are rough; "
+                    "redo with better figures from the saved inputs.",
+        }
+        print("\n  Energy (this training session):")
+        print(f"    GPU   : {rep['gpu_kwh']:.2f} kWh, {gpu_how}")
+        print(f"    Host  : {rep['host_kwh']:.2f} kWh ({self.host_watts:.0f} W assumed for CPU/RAM/etc.)")
+        print(f"    Total : {kwh:.2f} kWh incl. PUE {self.pue}")
+        print(f"    Carbon: ~{g_co2 / 1000:.2f} kg CO2e at {self.args.grid_gco2_per_kwh:g} g/kWh "
+              f"(set --grid-gco2-per-kwh for your grid)")
+        if save_dir:
+            try:
+                import json
+                (Path(save_dir) / "energy_report.json").write_text(json.dumps(rep, indent=2))
+                print(f"    Saved : {Path(save_dir) / 'energy_report.json'}")
+            except Exception as e:
+                print(f"    [WARN] could not save energy report: {e}")
+        return rep
+
+
+# ---------------------------------------------------------------------------
 # Sensible defaults per device
 # ---------------------------------------------------------------------------
 
@@ -480,6 +605,8 @@ def run_training(args):
     print("=" * 60 + "\n")
 
     start = time.time()
+    energy = EnergyMeter(device, args)
+    energy.start()
 
     if resume_ckpt:
         # When resuming, Ultralytics reads everything else from the checkpoint.
@@ -531,7 +658,10 @@ def run_training(args):
             translate   = 0.1,
         )
 
-    results = model.train(**train_kwargs)
+    try:
+        results = model.train(**train_kwargs)
+    finally:
+        energy.stop()
 
     elapsed = time.time() - start
     hours, rem = divmod(int(elapsed), 3600)
@@ -561,6 +691,7 @@ def run_training(args):
     print(f"  Results saved: {save_dir}")
     print(f"  Best weights : {best_weights}")
     print(f"  Last weights : {last_weights}")
+    energy.report(save_dir)
 
     # --- ONNX export ---
     if not args.no_export:
@@ -770,6 +901,34 @@ def main():
             "Skip automatic ONNX export after training. By default the best.pt "
             "weights are exported to ONNX automatically."
         )
+    )
+
+    parser.add_argument(
+        "--grid-gco2-per-kwh", type=float, default=480.0, dest="grid_gco2_per_kwh",
+        help=(
+            "Carbon intensity of the electricity grid, g CO2e per kWh, for the energy "
+            "report. Default 480 is roughly the world average; low-carbon hydro grids "
+            "(e.g. British Columbia, Quebec, Norway) are tens of times lower, coal-heavy "
+            "grids higher. Look up your grid's figure for a real estimate."
+        )
+    )
+    parser.add_argument(
+        "--pue", type=float, default=None,
+        help="Data-centre Power Usage Effectiveness (cooling/overhead multiplier). "
+             "Default 1.2 on CUDA servers, 1.0 on a laptop/desktop."
+    )
+    parser.add_argument(
+        "--gpu-watts", type=float, default=None, dest="gpu_watts",
+        help="Override the GPU power used when live power can't be read (W)."
+    )
+    parser.add_argument(
+        "--host-watts", type=float, default=None, dest="host_watts",
+        help="Power assumed for the rest of the machine (CPU, RAM, disks). "
+             "Default 10 W per CPU core visible on CUDA servers, 15 W on Apple Silicon."
+    )
+    parser.add_argument(
+        "--power-poll-s", type=float, default=10.0, dest="power_poll_s",
+        help="Seconds between GPU power readings when they're available."
     )
 
     args = parser.parse_args()
