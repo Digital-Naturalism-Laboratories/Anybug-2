@@ -22,7 +22,7 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
 | [Mothbox MBD-1.1](#mothbox-mbd-11) | **In** | Flat (base set) | 1,695 | 13,102 OBB |
 | [flat-bug](#flat-bug) | **In** | 19 subsets Flat, 4 Other | 6,131 → 7,341 (tiles) | 113,552 + 371 added |
 | [YOLO-Fast](#yolo-fast) | **In** | Other only | 257 | 257 |
-| [Fieldguide fg-arthropods-v1](#fieldguide-fg-arthropods-v1) | **In progress** (SAM boxes under review) | Other (expected) | 20,642 photos, 13,243 SAM boxes kept | 1 per photo |
+| [Fieldguide fg-arthropods-v1](#fieldguide-fg-arthropods-v1) | **In** | Other | 20,642 photos → 5,408 approved | 1 SAM OBB per photo |
 | [insectDetector](#insectdetector) | Skipped | – | 777 | – |
 | [broadTaxonClassifier](#broadtaxonclassifier) | Skipped | – | 125k crops | – |
 | [Entomoscope 2.0](#entomoscope-20) | Skipped | – | 54 | – |
@@ -39,7 +39,17 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
   `/mnt/ami-training/detector/sources/mothbox-mbd-1.1-zenodo-23140320/extracted` is
   file-for-file identical (same 1,695 names, same split, same box counts; checked 2026-10-14).
 - **Format:** YOLO OBB, `creature`, split train 1,356 / val 169 / test 170 images (10,817 / 792 / 1,550 boxes).
-- **Processing:** none to the labels. For training on the cluster we use our own copies:
+- **Empty-label check (2026-10-15):** 302 photos (256 train / 21 val / 25 test) have empty label files,
+  and at least some contain real insects (moths, flies, a swallowtail). `mothbox_empty_check.py` ran
+  MBD-1-2 over them (387 detections in 164 photos; 138 photos have none) and makes **one review tile per
+  detection** in `~/Desktop/Megabug/mothbox_empty_review` (green = real creature → becomes a label in that
+  photo, red = not). **Outcome:** Andrew reviewed all 313 detections ≥0.15 (145 creature, 168 not; the 74
+  weaker ones were left as "not"). `mothbox_apply_empty_review.py` wrote the approved boxes into 64 label
+  files (58 train / 1 val / 5 test photos, **+144 boxes: 123 / 4 / 17**). One merged box around two bugs that
+  were also boxed individually was dropped by hand. Records: `records/mothbox/`.
+- **Corrected set "MBD-1.2 data":** `incoming-andy/mothbox_mbd12_2048` on the cluster (copy of the 2048 px set
+  + label patch): **10,940 / 796 / 1,567 boxes** in train / val / test. Insects the model never detected in
+  those 64 photos are still unlabelled. For training on the cluster we use our own copies:
   `incoming-andy/mothbox_mbd11` (full size) and `incoming-andy/mothbox_mbd11_2048`, the
   latter shrunk to a 2048 px long side with `scripts/cluster/shrink_images.py` (pure speed-up, see TRAINING.md).
 - **Note:** `~/Desktop/2026_MOTHBOTYOLO_FULL` (1,630 images, 9,029 boxes) is an *older* set; don't use it as the base.
@@ -126,11 +136,15 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
   3. `fieldguide_sam_review_prep.py` + `review_missed.py`: Andrew reviews every kept box on the
      whole photo, with cyan circles marking confident detections outside the square (from step 1).
      **Rejecting** = bad box **or** unlabelled insects in the photo. Flagged photos (1,114) were
-     reviewed first. Snapshot 2026-10-15: 5,147 reviewed (4,220 good, 927 rejected), in
-     `records/fieldguide/sam_box_review_decisions.snapshot-2026-10-15.json`. Live file:
-     `~/Desktop/Megabug/fieldguide_sam_review/decisions.json`.
-- **Still to do:** finish the review, then convert approved photos (SAM OBB as the label; the outline can go into
-  `labels_seg`) to `fieldguide_yolo_obb/other`. Unreviewed and rejected photos are dropped.
+     reviewed first. **Final (2026-10-15, Andrew stopped there): 6,480 reviewed, 5,408 approved,
+     1,072 rejected**; the remaining ~6,800 kept boxes were never reviewed and are dropped. Record:
+     `records/fieldguide/sam_box_review_decisions.final-2026-10-15.json`.
+  4. `fieldguide_to_yolo_obb.py`: approved photos only. The SAM OBB is the label, the SAM outline goes in
+     `labels_seg`, EXIF-rotated photos (37) are saved upright and the rest are hard-linked. Named `FG-<MOTH|BFLY|ARTH>_<sha16>`.
+     A `manifest.jsonl` keeps image_key, taxon, order and licence class per output.
+- **Output:** `~/Desktop/Megabug/fieldguide_yolo_obb/other`: 5,408 images (moth 4,460, butterfly 834,
+  other_arthropod 114), 4.3 GB. **Licences of the approved photos:** unspecified 2,339, cc-by-nc 1,299,
+  missing 835, all-rights-reserved 729, cc-by 69. Fine for internal training; don't redistribute the images.
 - **Earlier, sample only:** the 184-photo `fg-arthropods-v1-sample` (in `~/Downloads`) was used to first
   inspect the format. One photo there is EXIF-rotated, so always apply `exif_transpose`.
 

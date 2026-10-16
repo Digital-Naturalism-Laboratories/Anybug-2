@@ -84,4 +84,12 @@ python3 review_missed.py --dir ~/Desktop/Megabug/fieldguide_sam_review \
 
 - **`flatbug_to_yolo_obb.py`:** flat-bug COCO polygons → YOLO OBB in `flat/` and `other/` (see DATASETS.md).
 - **`yolofast_to_yolo_obb.py`:** YOLO-Fast zip → YOLO OBB in `other/` (`--refit` is opt-in and not recommended).
-- **Fieldguide converter:** to be written once the SAM review is finished.
+- **`fieldguide_to_yolo_obb.py`:** approved Fieldguide SAM boxes → YOLO OBB in `other/` (+ `labels_seg`, `manifest.jsonl`).
+
+## Mothbox empty-label check
+
+**`mothbox_empty_check.py`** finds every image in a YOLO dataset whose label file is empty, runs a detector
+(MBD-1-2) on it, and makes one review tile per detection (tight crop + wide view, as in the flat-bug review;
+each keeps its rotated box). Green = real creature (will be written into that photo's label file), red = not.
+`--dets-from` reuses saved detections. (A first version showed whole photos; Andrew pointed out that a
+9248 px photo holds many candidates, so per-detection tiles are the right unit.)

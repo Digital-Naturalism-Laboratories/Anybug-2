@@ -1,0 +1,594 @@
+[
+ {
+  "file": "test/adeptTurca_2024_09_02__04_21_05_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-test-3db1e5b9-000",
+   "MBE-test-3db1e5b9-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "test/adeptTurca_2024_09_02__04_34_05_HDR0.jpg",
+  "boxes": 8,
+  "ids": [
+   "MBE-test-6025fea4-000",
+   "MBE-test-6025fea4-001",
+   "MBE-test-6025fea4-002",
+   "MBE-test-6025fea4-003",
+   "MBE-test-6025fea4-004",
+   "MBE-test-6025fea4-005",
+   "MBE-test-6025fea4-006",
+   "MBE-test-6025fea4-007"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "test/adeptTurca_2024_09_02__04_39_18_HDR0.jpg",
+  "boxes": 5,
+  "ids": [
+   "MBE-test-f1f2d301-000",
+   "MBE-test-f1f2d301-001",
+   "MBE-test-f1f2d301-003",
+   "MBE-test-f1f2d301-004",
+   "MBE-test-f1f2d301-005"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "test/adeptTurca_2024_09_02__06_54_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-test-8f3a7be4-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "test/alertTollo_2025_05_28__16_10_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-test-bb232f6c-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/accionSauro_2024_09_12__13_22_18_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-123bea28-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/accionSauro_2024_09_15__21_18_05_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-0d8e1828-000",
+   "MBE-train-0d8e1828-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__03_02_05_HDR0.jpg",
+  "boxes": 7,
+  "ids": [
+   "MBE-train-7b331c89-000",
+   "MBE-train-7b331c89-001",
+   "MBE-train-7b331c89-002",
+   "MBE-train-7b331c89-003",
+   "MBE-train-7b331c89-004",
+   "MBE-train-7b331c89-005",
+   "MBE-train-7b331c89-006"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__03_49_05_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-bdc794b1-000",
+   "MBE-train-bdc794b1-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__04_07_05_HDR0.jpg",
+  "boxes": 8,
+  "ids": [
+   "MBE-train-352c6bbd-000",
+   "MBE-train-352c6bbd-001",
+   "MBE-train-352c6bbd-002",
+   "MBE-train-352c6bbd-003",
+   "MBE-train-352c6bbd-004",
+   "MBE-train-352c6bbd-005",
+   "MBE-train-352c6bbd-006",
+   "MBE-train-352c6bbd-007"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__04_30_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-0850ea06-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__04_32_18_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-6d9eb3e0-000",
+   "MBE-train-6d9eb3e0-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__04_35_04_HDR0.jpg",
+  "boxes": 7,
+  "ids": [
+   "MBE-train-1cdf9999-000",
+   "MBE-train-1cdf9999-001",
+   "MBE-train-1cdf9999-002",
+   "MBE-train-1cdf9999-003",
+   "MBE-train-1cdf9999-004",
+   "MBE-train-1cdf9999-005",
+   "MBE-train-1cdf9999-006"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__05_20_05_HDR0.jpg",
+  "boxes": 3,
+  "ids": [
+   "MBE-train-5e67e644-000",
+   "MBE-train-5e67e644-001",
+   "MBE-train-5e67e644-002"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__05_30_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-875ee210-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__05_59_05_HDR0.jpg",
+  "boxes": 10,
+  "ids": [
+   "MBE-train-b1a940fc-000",
+   "MBE-train-b1a940fc-001",
+   "MBE-train-b1a940fc-002",
+   "MBE-train-b1a940fc-003",
+   "MBE-train-b1a940fc-004",
+   "MBE-train-b1a940fc-005",
+   "MBE-train-b1a940fc-006",
+   "MBE-train-b1a940fc-007",
+   "MBE-train-b1a940fc-008",
+   "MBE-train-b1a940fc-009"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__06_08_05_HDR0.jpg",
+  "boxes": 3,
+  "ids": [
+   "MBE-train-bffbbcfb-000",
+   "MBE-train-bffbbcfb-001",
+   "MBE-train-bffbbcfb-004"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__06_10_18_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-3f07f50f-000",
+   "MBE-train-3f07f50f-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__06_21_05_HDR0.jpg",
+  "boxes": 6,
+  "ids": [
+   "MBE-train-7811867c-000",
+   "MBE-train-7811867c-001",
+   "MBE-train-7811867c-003",
+   "MBE-train-7811867c-004",
+   "MBE-train-7811867c-005",
+   "MBE-train-7811867c-006"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__06_44_05_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-ba8e6b26-000",
+   "MBE-train-ba8e6b26-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__06_49_05_HDR0.jpg",
+  "boxes": 4,
+  "ids": [
+   "MBE-train-5ab4f350-000",
+   "MBE-train-5ab4f350-001",
+   "MBE-train-5ab4f350-004",
+   "MBE-train-5ab4f350-005"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__07_06_18_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-e3aad2fc-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__07_08_05_HDR0.jpg",
+  "boxes": 3,
+  "ids": [
+   "MBE-train-cf4361d1-000",
+   "MBE-train-cf4361d1-001",
+   "MBE-train-cf4361d1-002"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_02__07_18_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-0e86e9b9-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/adeptTurca_2024_09_03__19_02_20_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-b632110d-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/agileCigua_2025_09_22__21_02_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-24c58193-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/agileCigua_2025_09_22__21_03_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-c34e6600-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/alertTollo_2025_05_28__21_39_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-b48e383a-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/ampleBonobo_2024_09_13__04_19_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-1c5575cc-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/ampleBonobo_2024_09_13__04_48_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-de37722b-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/ampleBonobo_2026_04_11__23_58_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-e1a1562a-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/ampleBonobo_2026_04_12__04_28_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-2cd873f9-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/bowedBarbo_2026-06-25T02-37-06+02-00.jpg",
+  "boxes": 13,
+  "ids": [
+   "MBE-train-1e8c7f7f-000",
+   "MBE-train-1e8c7f7f-001",
+   "MBE-train-1e8c7f7f-002",
+   "MBE-train-1e8c7f7f-003",
+   "MBE-train-1e8c7f7f-004",
+   "MBE-train-1e8c7f7f-005",
+   "MBE-train-1e8c7f7f-006",
+   "MBE-train-1e8c7f7f-007",
+   "MBE-train-1e8c7f7f-008",
+   "MBE-train-1e8c7f7f-009",
+   "MBE-train-1e8c7f7f-010",
+   "MBE-train-1e8c7f7f-011",
+   "MBE-train-1e8c7f7f-012"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/efectoMinla_2025_06_22__04_02_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-c7d91386-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_23__04_59_06_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-fd4aca48-000",
+   "MBE-train-fd4aca48-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_23__19_23_19_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-84f32fd0-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_23__21_49_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-80aa55d0-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_23__23_01_21_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-f43aed79-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_23__23_11_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-203e8087-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/grupoKite_2025_06_24__19_45_19_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-f506ba9f-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/layerMomoto_2025_07_31__04_04_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-7ab7884a-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/layerMomoto_2025_07_31__04_47_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-204b1ef4-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/liquidSerau_2024_09_04__02_18_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-73302099-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/liquidSerau_2024_09_05__02_14_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-b834b970-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/metaYegua_2026_04_06__19_01_22_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-c7b4fdbe-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/metaYegua_2026_04_07__19_03_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-ed2cc07b-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/metaYegua_2026_04_07__21_01_22_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-4581e08c-002"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/metaYegua_2026_04_08__04_09_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-e24bf497-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/metaYegua_2026_05_18__22_01_20_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-054429f2-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/pesarGuirre_2025_06_17__21_11_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-9325fbd5-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/pesarGuirre_2025_06_18__21_03_05_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-8a72e89e-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/prizeCrab_2024_09_17__19_26_04_HDR0.jpg",
+  "boxes": 4,
+  "ids": [
+   "MBE-train-4a597b6a-000",
+   "MBE-train-4a597b6a-001",
+   "MBE-train-4a597b6a-003",
+   "MBE-train-4a597b6a-005"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/rosaZebra_2025_11_14__04_25_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-2808be31-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/talkApe_2026_06_02__03_09_06.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-65a9513a-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/waveUrta_2025_03_03__02_51_06_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-351d34c9-000",
+   "MBE-train-351d34c9-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/waveUrta_2025_03_17__19_01_22_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-3836dca7-002"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/waveUrta_2025_03_18__04_02_06_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-1a2b44f8-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/waveUrta_2025_03_18__04_34_20_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-afd49df9-003"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/wingedHapuku_2025_12_18__19_00_06_HDR0.jpg",
+  "boxes": 2,
+  "ids": [
+   "MBE-train-fff3c6f0-000",
+   "MBE-train-fff3c6f0-001"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/wingedHapuku_2025_12_18__19_05_21_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-a4cdafac-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/wingedHapuku_2026_02_09__22_00_22_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-9f8f2941-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/wingedHapuku_2026_04_08__22_00_22_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-774119ff-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "train/wingedHapuku_2026_04_08__22_15_19_HDR0.jpg",
+  "boxes": 1,
+  "ids": [
+   "MBE-train-a9991ea0-000"
+  ],
+  "merged_duplicates": []
+ },
+ {
+  "file": "val/bothBatara_2025_06_03__21_04_06_HDR0.jpg",
+  "boxes": 4,
+  "ids": [
+   "MBE-val-6467956c-000",
+   "MBE-val-6467956c-001",
+   "MBE-val-6467956c-002",
+   "MBE-val-6467956c-010"
+  ],
+  "merged_duplicates": []
+ }
+]
