@@ -7,7 +7,7 @@
 | **Mothbox** | Mothbox MBD-1.1 (its own train/val/test split) | trained `s` and `m` at 1600 — `s` wins (see records/results) |
 | **TestFlat_150MB** | 6 Mothbox photos + 2 per flat-bug flat subset (`scripts/train/make_testflat_sample.py`) | built; used to test the cluster workflow |
 | **Flat** | Mothbox (fixed labels) + flat-bug `flat` + Charvalakis sticky sheets | **built: `Flat_v1`** (see below) |
-| **Mixed** | Flat + flat-bug `other` + YOLO-Fast + Fieldguide | after the Fieldguide review |
+| **Mixed** | Flat sources + flat-bug `other` + YOLO-Fast + Fieldguide | **built: `Mixed_v1`** (see below) |
 
 Flat and Mixed are built with `scripts/train/collect_yolo_training_data.py`. That script:
 - re-splits sources 80/10/10;
@@ -45,6 +45,30 @@ two splits; the Mothbox photos are all in their original split. 28 Mothbox OBB l
 
 **To compare with MBD-1-1 / MBD-1-2,** evaluate Flat models on the Mothbox test split (`mothbox_mbd12_2048/data.yaml`,
 `split=test`), which is the same 170 photos.
+
+## Mixed_v1 (built 2026-10-17)
+
+`~/Desktop/Megabug/Mixed_v1`, 7.7 GB, all images ≤2048 px. Same build as Flat_v1 plus the three "other" sources
+(each shrunk with `shrink_images.py` first): `flatbug_other_2048` (3,175 images / 20,493 boxes), `yolofast_other_2048`
+(257 / 257), `fieldguide_other_2048` (5,408 / 5,408).
+
+| Source | Train | Val | Test |
+|---|---|---|---|
+| Mothbox (own split) | 1,356 | 168 | 170 |
+| flat-bug (flat + other) | 5,876 | 726 | 739 |
+| Fieldguide | 4,303 | 558 | 547 |
+| YOLO-Fast | 214 | 20 | 23 |
+| Charvalakis sticky sheets | 59 | 5 | 11 |
+| **Total images** | **11,808** | **1,477** | **1,490** |
+| **Boxes** | 126,284 | 15,284 | 16,720 (158,288 total) |
+
+```
+python3 collect_yolo_training_data.py -s mothbox_mbd12_2048 -s flatbug_flat_2048 -s charvalakis_yolo_obb/flat \
+  -s flatbug_other_2048 -s yolofast_other_2048 -s fieldguide_other_2048 --keep-split mothbox_mbd12_2048 -o Mixed_v1
+```
+
+Then the duplicate `lanzarViper_2026_05_21__01_08_04_HDR0` val copy was removed. Checks passed: labels for every image,
+all lines 9-column, no group spans splits, Mothbox photos in their original split.
 
 ## Cluster: ami-workspace-02-gpu
 
