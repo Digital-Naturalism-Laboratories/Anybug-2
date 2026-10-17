@@ -128,6 +128,27 @@ yolo val task=obb split=test imgsz=1600 batch=4 data=<…>/mothbox_mbd11_2048/da
 - **imgsz:** keep 1600, matching Process; laptop cost grows with the square of the size. Mothbox's smallest 10% of boxes are ≤11 px at 1600
   (~14 px at 2048). A 2048 experiment is worth doing once, but note that the ONNX export fixes the input size.
 
+## Weights & Biases logging (moth-ai team on CoreWeave Forge)
+
+Added 2026-10-17 at a collaborator's request; runs are also recorded in `records/results/` here.
+
+- **One-time setup on the GPU machine:**
+  - `source env.sh && pip install wandb`
+  - `wandb login --host=https://api.forge.coreweave.com`, pasting your personal key (Forge → User settings → API keys) when prompted. That is the API server; runs show up at https://forge.coreweave.com/wandb/moth-ai/<project>. Verified 2026-10-17 with a TestFlat smoke run.
+  - Never put the key in `env.sh` or any file on the shared drive. `wandb login` stores it in `~/.netrc` with private permissions.
+- **Per run:** add `--wandb-project anybug-2 --wandb-entity moth-ai [--wandb-tags …] [--wandb-notes "…"]`.
+  - `train_yolo_obb.py` starts the W&B run itself, so it gets a clean project and run name, plus config with the dataset,
+    model, imgsz, epochs, batch, mosaic, val conf and the Anybug-2 git commit.
+  - Ultralytics' callback then logs epoch metrics, plots and the best model into it.
+  - After training, the energy report is added to the run summary as `energy/*`.
+- **Gotcha:** without this, Ultralytics' own W&B logging names the project after the `--project` folder path
+  (that's where the `-mnt-anybug-runs-runs` project on Forge came from).
+- **Resumed runs** keep logging only if the original run used W&B.
+- **Older runs** (trained before W&B was set up) can be uploaded without retraining with
+  `scripts/train/wandb_backfill.py --run <run folder> --project anybug-2 --entity moth-ai [--weights] [--test NAME=P,R,mAP50,mAP50-95 …]`.
+  It uploads `results.csv` as per-epoch history, `args.yaml` as config, the plots, the energy report and the test scores,
+  tagged `backfilled`.
+
 ## Energy and carbon
 
 `train_yolo_obb.py` prints an energy estimate after training and saves `energy_report.json` in the

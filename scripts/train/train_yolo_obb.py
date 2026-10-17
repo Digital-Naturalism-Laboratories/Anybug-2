@@ -469,6 +469,59 @@ class EnergyMeter:
 
 
 # ---------------------------------------------------------------------------
+# Weights & Biases logging (optional)
+# ---------------------------------------------------------------------------
+
+def start_wandb(args, data_yaml, device, batch):
+    """Start a W&B run BEFORE model.train(). Ultralytics' own W&B callback only creates
+    a run when none exists (and would name the project after the --project folder path,
+    e.g. "-mnt-ami-training-andy-runs"), so it logs its metrics, plots and best model
+    into this run instead. Log in once on the machine first with `wandb login`
+    (add --host=<your W&B server> for a dedicated server). Returns the run or None."""
+    if not args.wandb_project:
+        return None
+    try:
+        import wandb
+        from ultralytics import settings as yolo_settings
+    except ImportError:
+        print("[WARN] --wandb-project set but wandb isn't installed (pip install wandb) - not logging.")
+        return None
+    yolo_settings.update({"wandb": True})  # turns on Ultralytics' W&B callback
+    import subprocess
+    commit = None
+    try:
+        commit = subprocess.run(["git", "-C", str(Path(__file__).parent), "rev-parse", "--short", "HEAD"],
+                                capture_output=True, text=True, timeout=5).stdout.strip() or None
+    except Exception:
+        pass
+    run = wandb.init(
+        entity=args.wandb_entity, project=args.wandb_project, name=args.name, job_type="train",
+        tags=args.wandb_tags or None, notes=args.wandb_notes,
+        config={"dataset": data_yaml.parent.name, "data_yaml": str(data_yaml), "model_size": args.model,
+                "weights": args.weights, "imgsz": args.imgsz, "epochs": args.epochs, "batch": batch,
+                "mosaic": args.mosaic, "device": device, "val_conf": args.val_conf,
+                "script": "Anybug-2/scripts/train/train_yolo_obb.py", "anybug2_commit": commit},
+    )
+    print(f"[INFO] W&B run: {run.url}")
+    return run
+
+
+def finish_wandb(run, energy_report):
+    """Ultralytics finishes the run at the end of training; reopen it to add the energy report."""
+    if run is None:
+        return
+    import wandb
+    try:
+        r = wandb.init(entity=run.entity, project=run.project, id=run.id, resume="must")
+        for k, v in (energy_report or {}).items():
+            if isinstance(v, (int, float, str)):
+                r.summary[f"energy/{k}"] = v
+        r.finish()
+    except Exception as e:
+        print(f"[WARN] could not add the energy report to W&B: {e}")
+
+
+# ---------------------------------------------------------------------------
 # Sensible defaults per device
 # ---------------------------------------------------------------------------
 
@@ -605,6 +658,10 @@ def run_training(args):
     print("=" * 60 + "\n")
 
     start = time.time()
+    wb_run = None if resume_ckpt else start_wandb(args, data_yaml, device, batch)
+    if resume_ckpt and args.wandb_project:
+        print("[INFO] Resuming: W&B logging continues only if the original run used it "
+              "(Ultralytics reattaches to the run saved in the run folder).")
     energy = EnergyMeter(device, args)
     energy.start()
 
@@ -697,7 +754,7 @@ def run_training(args):
     print(f"  Results saved: {save_dir}")
     print(f"  Best weights : {best_weights}")
     print(f"  Last weights : {last_weights}")
-    energy.report(save_dir)
+    finish_wandb(wb_run, energy.report(save_dir))
 
     # --- ONNX export ---
     if not args.no_export:
@@ -909,6 +966,18 @@ def main():
         )
     )
 
+    parser.add_argument(
+        "--wandb-project", default=None, dest="wandb_project",
+        help="Log this run to Weights & Biases under this project (e.g. anybug-2). Off when not given."
+    )
+    parser.add_argument(
+        "--wandb-entity", default=None, dest="wandb_entity",
+        help="W&B team/organisation (e.g. moth-ai). Default: your W&B default entity."
+    )
+    parser.add_argument("--wandb-tags", nargs="*", default=None, dest="wandb_tags",
+                        help="Tags for the W&B run, e.g. flat s1600")
+    parser.add_argument("--wandb-notes", default=None, dest="wandb_notes",
+                        help="Free-text notes for the W&B run")
     parser.add_argument(
         "--val-conf", type=float, default=None, dest="val_conf",
         help=(
