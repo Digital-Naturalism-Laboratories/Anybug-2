@@ -6,7 +6,7 @@
 |---|---|---|
 | **Mothbox** | Mothbox MBD-1.1 (its own train/val/test split) | trained `s` and `m` at 1600 — `s` wins (see records/results) |
 | **TestFlat_150MB** | 6 Mothbox photos + 2 per flat-bug flat subset (`scripts/train/make_testflat_sample.py`) | built; used to test the cluster workflow |
-| **Flat** | Mothbox + flat-bug `flat` | after the Fieldguide review |
+| **Flat** | Mothbox (fixed labels) + flat-bug `flat` + Charvalakis sticky sheets | **built: `Flat_v1`** (see below) |
 | **Mixed** | Flat + flat-bug `other` + YOLO-Fast + Fieldguide | after the Fieldguide review |
 
 Flat and Mixed are built with `scripts/train/collect_yolo_training_data.py`. That script:
@@ -16,6 +16,35 @@ Flat and Mixed are built with `scripts/train/collect_yolo_training_data.py`. Tha
 
 Note that it re-splits Mothbox too. To compare against MBD-1-1 on the same test photos, add an
 option that keeps a source's existing split, or evaluate on the Mothbox test split separately.
+
+## Flat_v1 (built 2026-10-16)
+
+`~/Desktop/Megabug/Flat_v1`, 3.2 GB, all images shrunk to ≤2048 px (training runs at 1600 and Ultralytics resizes on load).
+
+| Source | Images | Boxes | Split |
+|---|---|---|---|
+| Mothbox, fixed labels (`mothbox_mbd12_2048`) | 1,695 | 14,693 | **its own** (`--keep-split`): 1,356 / 169 / 170 |
+| flat-bug `flat` (`flatbug_flat_2048`) | 4,166 | 107,457 | 80/10/10 (tiles grouped) |
+| Charvalakis sticky sheets (`charvalakis_yolo_obb/flat`) | 75 | 9,985 | 80/10/10 (trap-days grouped) |
+| **Flat_v1 total** | **5,935** (4,754 / 594 / 587) | **132,130** (107,766 / 10,341 / 14,023) | |
+
+Built with:
+```
+python3 collect_yolo_training_data.py -s mothbox_mbd12_2048 -s flatbug_flat_2048 -s charvalakis_yolo_obb/flat \
+  --keep-split mothbox_mbd12_2048 -o Flat_v1
+```
+
+Then one fix: the photo `lanzarViper_2026_05_21__01_08_04_HDR0` is byte-identical in the original Mothbox **train and
+val** splits (a leak in MBD-1.1 itself), so its val copy was removed. Checks: every image has a label file; no group spans
+two splits; the Mothbox photos are all in their original split. 28 Mothbox OBB lines (26 photos) have a corner up to
+1.039, just off the image edge. They're left as-is, since Ultralytics accepts them and they are what MBD-1-2 used.
+
+**Counting note:** some Mothbox label files have no trailing newline, so `cat labels/*.txt | grep -c .` undercounts
+(13,303 instead of 14,693). Count with `awk 'NF' labels/*.txt | wc -l`. Earlier box counts quoted for the Mothbox set
+(13,102 / 13,303) were undercounts made the same way.
+
+**To compare with MBD-1-1 / MBD-1-2,** evaluate Flat models on the Mothbox test split (`mothbox_mbd12_2048/data.yaml`,
+`split=test`), which is the same 170 photos.
 
 ## Cluster: ami-workspace-02-gpu
 
@@ -59,7 +88,11 @@ option that keeps a source's existing split, or evaluate on the Mothbox test spl
 5. **AutoBatch (`--batch -1`) is too cautious.** It picked 3, but real use at batch 3 was ~7 GB. For `s` at 1600, `--batch 6` peaks around 19–20 GB.
 6. **`CUDA out of memory in TaskAlignedAssigner …` warnings** on photos with >1,000 insects are harmless:
    Ultralytics redoes the label matching one image at a time and carries on. Only a `RuntimeError` is fatal.
-7. **`lr0` is ignored.** `train_yolo_obb.py`'s `lr0=0.005` is ignored because `optimizer=auto` (it picks SGD lr 0.01 for long runs).
+7. **Validation NMS out of memory on dense data** (Flat_v1, epoch 25): per-epoch validation keeps every prediction
+   above conf 0.001. On sticky cards with 1,000+ insects that is about 30k candidates, and rotated NMS's IoU matrix
+   needs ~3.5 GB, so training crashed in `batch_probiou`. Fix: `--val-conf 0.01` (new flag). To rescue a crashed run,
+   set `train_args['conf'] = 0.01` inside `last.pt` and `--resume` (resume ignores command-line args).
+8. **`lr0` is ignored.** `train_yolo_obb.py`'s `lr0=0.005` is ignored because `optimizer=auto` (it picks SGD lr 0.01 for long runs).
    This was also true for MBD-1-1.
 
 ## Commands

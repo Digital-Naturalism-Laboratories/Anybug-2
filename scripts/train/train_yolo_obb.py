@@ -657,6 +657,12 @@ def run_training(args):
             mosaic      = args.mosaic,
             translate   = 0.1,
         )
+        if args.val_conf is not None:
+            # Confidence floor for the per-epoch validation. Ultralytics' default (0.001) keeps
+            # so many candidates on dense images (sticky cards with 1000+ insects) that rotated NMS
+            # builds a ~30k x 30k IoU matrix (3.5 GB) and runs out of GPU memory mid-training
+            # (Flat_v1, epoch 25, 2026-10-16). 0.01 barely affects mAP.
+            train_kwargs["conf"] = args.val_conf
 
     try:
         results = model.train(**train_kwargs)
@@ -903,6 +909,14 @@ def main():
         )
     )
 
+    parser.add_argument(
+        "--val-conf", type=float, default=None, dest="val_conf",
+        help=(
+            "Minimum confidence kept during per-epoch validation (Ultralytics default 0.001). "
+            "Use 0.01 on dense datasets (e.g. Flat/Mixed with sticky cards) to avoid "
+            "out-of-memory crashes in validation NMS."
+        )
+    )
     parser.add_argument(
         "--grid-gco2-per-kwh", type=float, default=480.0, dest="grid_gco2_per_kwh",
         help=(

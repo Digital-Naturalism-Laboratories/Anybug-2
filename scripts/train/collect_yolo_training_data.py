@@ -386,13 +386,15 @@ def detect_label_to_obb(line):
 # Splitting
 # ---------------------------------------------------------------------------
 
-TILE_SUFFIX = re.compile(r"_x\d+_y\d+$")
+TILE_SUFFIX = re.compile(r"(_x\d+_y\d+|__t\d+)$")
 
 
 def source_photo_key(pair):
-    """Tiles cut from one photo (named <photo>_x<X>_y<Y>, e.g. by
-    megabug/flatbug_to_yolo_obb.py) share a key, so they land in the same split
-    instead of leaking near-identical overlap regions between train and val."""
+    """Images that must share a split get the same key:
+      - tiles cut from one photo, named <photo>_x<X>_y<Y> (flatbug_to_yolo_obb.py),
+        so near-identical overlap regions don't leak between train and val;
+      - time-lapse frames of one scene, named <scene>__t<time>
+        (charvalakis_to_yolo_obb.py: one trap-day), which are near-duplicates."""
     img = Path(get_image_path_from_pair(pair))
     return (str(img.parent), TILE_SUFFIX.sub("", img.stem))
 
@@ -914,6 +916,13 @@ def main():
     parser.add_argument("--split", nargs=3, type=float, default=[0.8, 0.1, 0.1],
         metavar=("TRAIN", "VAL", "TEST"),
         help="Train/val/test ratios (must sum to 1.0). Default: 0.8 0.1 0.1")
+    parser.add_argument("--keep-split", action="append", default=[], metavar="DIR",
+        help=(
+            "A source whose YOLO folder already has images/train, images/val, "
+            "images/test: keep that split instead of re-splitting it (repeatable). "
+            "Used for the Mothbox set so Flat/Mixed models can be scored on the "
+            "same Mothbox test photos as earlier models."
+        ))
     parser.add_argument("--seed", type=int, default=42,
         help="Random seed for reproducible splits (default: 42)")
     parser.add_argument("--classes", nargs="+", default=None,
@@ -1080,7 +1089,25 @@ def main():
     print(f"\n[4/5] Splitting and copying files...")
 
     al_train, al_val, al_test = split_items(all_anylabeling_pairs, train_r, val_r, test_r, args.seed)
-    yl_train, yl_val, yl_test = split_items(all_yolo_pairs,        train_r, val_r, test_r, args.seed)
+    keep_dirs = [str(Path(d).resolve()) for d in args.keep_split]
+    fixed = {"train": [], "val": [], "test": []}
+    to_split = []
+    for pair in all_yolo_pairs:
+        img = Path(pair[0]).resolve()
+        split = None
+        if any(str(img).startswith(k) for k in keep_dirs):
+            parts = img.parts
+            if "images" in parts and parts.index("images") + 1 < len(parts):
+                split = parts[parts.index("images") + 1]
+        if split in fixed:
+            fixed[split].append(pair)
+        else:
+            to_split.append(pair)
+    if keep_dirs:
+        print(f"  Kept original split for {sum(len(v) for v in fixed.values())} images "
+              f"(train {len(fixed['train'])}, val {len(fixed['val'])}, test {len(fixed['test'])})")
+    yl_train, yl_val, yl_test = split_items(to_split, train_r, val_r, test_r, args.seed)
+    yl_train, yl_val, yl_test = yl_train + fixed["train"], yl_val + fixed["val"], yl_test + fixed["test"]
 
     total = len(all_anylabeling_pairs) + len(all_yolo_pairs)
     print(f"  Total images: {total}")

@@ -27,7 +27,7 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
 | [broadTaxonClassifier](#broadtaxonclassifier) | Skipped | – | 125k crops | – |
 | [Entomoscope 2.0](#entomoscope-20) | Skipped | – | 54 | – |
 | [insects.zip (green roofs)](#insectszip-green-roof-camera-traps) | Skipped | – | 7,667 | – |
-| [Charvalakis et al. 2026](#charvalakis-et-al-2026-sticky-sheets-under-streetlights) | Images not public; authors emailed | (Flat if obtained) | – | – |
+| [Charvalakis et al. 2026](#charvalakis-et-al-2026-sticky-sheets-under-streetlights) | **In (a small slice)** | Flat | 12,798 frames → 75 | 9,985 (class 0 only) |
 
 ---
 
@@ -38,7 +38,9 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
   Dataset 1-1" (record 23140320). The cluster copy at
   `/mnt/ami-training/detector/sources/mothbox-mbd-1.1-zenodo-23140320/extracted` is
   file-for-file identical (same 1,695 names, same split, same box counts; checked 2026-10-14).
-- **Format:** YOLO OBB, `creature`, split train 1,356 / val 169 / test 170 images (10,817 / 792 / 1,550 boxes).
+- **Format:** YOLO OBB, `creature`, split train 1,356 / val 169 / test 170 images. Box counts were first quoted
+  as 10,817 / 792 / 1,550 (undercounted: some label files lack a trailing newline; see TRAINING.md). True total with
+  the fix: 14,693 boxes. One photo (`lanzarViper_2026_05_21__01_08_04_HDR0`) is duplicated in train and val.
 - **Empty-label check (2026-10-15):** 302 photos (256 train / 21 val / 25 test) have empty label files,
   and at least some contain real insects (moths, flies, a swallowtail). `mothbox_empty_check.py` ran
   MBD-1-2 over them (387 detections in 164 photos; 138 photos have none) and makes **one review tile per
@@ -181,4 +183,33 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
 - Their DataverseNL deposit (doi:10.34894/N4EVBD, CC-BY-4.0) has only `best.pt`, counts and scripts:
   **no images or boxes**. The companion deposits doi:10.34894/SNKXWK and doi:10.34894/FLUWWY are spreadsheets only.
   Andrew emailed the authors (contact k.spoelstra@nioo.knaw.nl) on 2026-10-14.
-- If the data arrives: check that every insect is boxed, and the share of infrared images. Likely Flat.
+- **Data received 2026-10-16** from the authors as Google Drive multi-part zips
+  (`~/Desktop/Mushbug_Datasets/20241023_Config_file-20261016T144408Z-1-00{1..6}.zip` is the complete download;
+  the `…145236Z` batch is a partial duplicate; `doi-10.34894-n4evbd.zip` is just the public deposit).
+  Licence/terms of the shared images: ask the authors before redistributing.
+- **Format:** `20241023_Config_file/{train,val}/{images,labels}`, YOLO axis-aligned, 12,798 frames
+  (3840×2160 or 4608×2592) from **13 traps × 496 trap-days** (L = lit trap, D = dark control), **one frame every
+  5 minutes**. 1.15 M boxes. **Class 0 = insect** (988k), **class 1 = not-insect debris** (159k: leaves, fibres,
+  labels, smudges); there was no names file, so the classes were inferred from crops. Their train/val split
+  mixes frames of 495 of the 496 trap-days, so their reported validation scores are leaky.
+- **Assessment:**
+  - 2,724 frames (~21%) are **infrared**, blurry and low-detail.
+  - The visible frames are trail-camera quality, many out of focus.
+  - Labels look good: obvious insects are boxed, debris is boxed separately, and some of the tiniest specks
+    are unboxed (similar to flat-bug AMI-traps).
+  - Insects are a median 48 px, about 20 px at imgsz 1600.
+- **Decisions (Andrew):**
+  - Drop infrared.
+  - Labels are complete enough on visible frames.
+  - Image quality is low, so take only a handful, for variety.
+- **Refinement:**
+  1. `charvalakis_focus_rank.py` scores sharpness **inside the authors' insect boxes** (median Laplacian
+     variance over a frame's insects). A frame-centre score was tried first and rejected: knocked-sideways cameras
+     showing trees and tray edges, plus water droplets, ranked "sharpest". 9,811 visible frames with insects were ranked.
+  2. One frame per trap-hour (the sharpest), giving 1,237 scenes. Andrew reviewed them sorted by sharpness, with
+     labels drawn, and chose the **top 7%**.
+  3. `charvalakis_to_yolo_obb.py`: top 7% (87 scenes), **max 2 frames per trap-day** (a sticky sheet barely changes
+     within a night), giving **75 frames from 47 trap-days, 9,985 insect boxes**. Class 0 becomes an unrotated OBB
+     `creature` and class 1 is dropped. Images are shrunk to 2048 px. Named `CHV-<trap>-<L|D>-<date>__t<HHMMSS>`, so
+     `collect_yolo_training_data.py` keeps each trap-day in one split.
+- **Output:** `~/Desktop/Megabug/charvalakis_yolo_obb/flat` (46 MB).

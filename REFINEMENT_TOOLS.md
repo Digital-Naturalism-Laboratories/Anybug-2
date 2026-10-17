@@ -93,3 +93,18 @@ python3 review_missed.py --dir ~/Desktop/Megabug/fieldguide_sam_review \
 each keeps its rotated box). Green = real creature (will be written into that photo's label file), red = not.
 `--dets-from` reuses saved detections. (A first version showed whole photos; Andrew pointed out that a
 9248 px photo holds many candidates, so per-detection tiles are the right unit.)
+
+## Sticky-sheet (Charvalakis) tools
+
+- **`charvalakis_focus_rank.py`** reads the multi-part zips directly and drops infrared frames (near-grayscale).
+  It scores each visible frame's focus inside the authors' insect boxes and writes `frames.jsonl` plus a review folder,
+  sorted sharpest first. Tiles are native-resolution crops of the insects.
+- **`charvalakis_to_yolo_obb.py`** takes the sharpest frame per trap-hour, then the top `--top-frac` scenes, capped at
+  `--per-day` frames per trap-day. It writes YOLO OBB (class 0 only), shrunk to 2048 px.
+
+## collect_yolo_training_data.py additions (2026-10-16)
+
+- **Grouping:** images named `<scene>__t<time>` (time-lapse frames) are grouped like `<photo>_x<X>_y<Y>` tiles, so they
+  always land in the same split.
+- **`--keep-split DIR`:** a source that already has `images/{train,val,test}` keeps its split instead of being
+  re-split. Used for Mothbox, so every model is scored on the same Mothbox test photos.
