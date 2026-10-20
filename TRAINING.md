@@ -70,6 +70,25 @@ python3 collect_yolo_training_data.py -s mothbox_mbd12_2048 -s flatbug_flat_2048
 Then the duplicate `lanzarViper_2026_05_21__01_08_04_HDR0` val copy was removed. Checks passed: labels for every image,
 all lines 9-column, no group spans splits, Mothbox photos in their original split.
 
+## Mixed_Open_v1 (built 2026-10-20) — the publishable version
+
+Fieldguide's terms allow training ML models on its photos, so Mixed_v1 is fine for our own models. To **publish** the
+mashup, though, only openly licensed images may be redistributed. Mixed_Open_v1 = **Mixed_v1 minus every Fieldguide photo
+whose `license_class` isn't cc0 / cc-by / cc-by-sa** (Fieldguide README's redistribution rule). Everything else, including
+each image's split, is identical, so results are comparable on the shared photos.
+
+- **Fieldguide kept:** 121 of 5,408 (16 cc0, 69 cc-by, 36 cc-by-sa); 97 train / 10 val / 14 test.
+  5,287 photos and 5,287 boxes removed. Exclusion list: `records/fieldguide/mixed_open_v1_exclude.txt` (paths relative to the
+  dataset root).
+- **Totals:** 9,488 images (7,602 / 929 / 957), 153,001 boxes (122,078 / 14,736 / 16,187).
+- **Local:** `~/Desktop/Megabug/Mixed_Open_v1` (hard links into Mixed_v1, no extra disk).
+- **Cluster:** built server-side the same way: `cp -al Mixed_v1 Mixed_Open_v1`, then remove the listed files.
+- **Before publishing, also check the other sources' terms:**
+  - YOLO-Fast (no licence recorded with the archive);
+  - the Charvalakis sticky sheets (shared privately by the authors);
+  - flat-bug (Creative Commons per subset DOI);
+  - the Mothbox data (our own Zenodo record).
+
 ## Cluster: ami-workspace-02-gpu
 
 - **Access:** `ssh ami-workspace-02-gpu` (via the `ami-bastion` jump host; key `~/.ssh/andy`).
