@@ -102,8 +102,9 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
 
 ## YOLO-Fast
 
-- **Source:** `YOLO-Fast-dataset.zip` (origin and licence not recorded in the archive; the file
-  names point to bark-beetle work: Ips, Pityogenes, Xyleborinus…).
+- **Source:** `YOLO-Fast-dataset.zip` from Shirali, H. (2026), the Entomoscope 2.0 / ENIMAS 2.0 paper data,
+  doi:10.5281/zenodo.21892852. **CC-BY-4.0** (found 2026-10-29 from the download's "where from" metadata; the
+  archive itself has no licence file). Mostly bark beetles (Ips, Pityogenes, Xyleborinus…).
 - **Format:** 257 focus-stacked macro PNGs (mostly 4056×3040), axis-aligned YOLO, exactly one box per image.
 - **Assessment:** single specimens filling a large part of the frame; the boxes sometimes cut off a wing or leg.
 - **Refinement:** `yolofast_to_yolo_obb.py`. Their boxes are kept as unrotated OBBs and PNGs re-saved
@@ -183,6 +184,8 @@ Local working folder: `~/Desktop/Megabug/`. Cluster: `ami-workspace-02-gpu:/mnt/
 - Their DataverseNL deposit (doi:10.34894/N4EVBD, CC-BY-4.0) has only `best.pt`, counts and scripts:
   **no images or boxes**. The companion deposits doi:10.34894/SNKXWK and doi:10.34894/FLUWWY are spreadsheets only.
   Andrew emailed the authors (contact k.spoelstra@nioo.knaw.nl) on 2026-10-14.
+- **Licence:** the authors licensed the frames we use **CC-BY-4.0** for the Anybug-2 release (reply to Andrew,
+  early Nov 2026), so the 75 frames are in the open core.
 - **Data received 2026-10-16** from the authors as Google Drive multi-part zips
   (`~/Desktop/Mushbug_Datasets/20241023_Config_file-20261016T144408Z-1-00{1..6}.zip` is the complete download;
   the `…145236Z` batch is a partial duplicate; `doi-10.34894-n4evbd.zip` is just the public deposit).

@@ -10,3 +10,9 @@ export TMPDIR=/mnt/ami-training/andy/tmp
 cd /mnt/ami-training/andy
 # NOTE: do NOT set PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True on this vGPU/MIG slice —
 # training then dies with "CUDA_ERROR_NOT_SUPPORTED ... cuMemAddressReserve".
+# W&B stages and caches artifact files (model uploads) under ~ by default; the 20 GB root disk filled
+# up and crashed the end of a training run (mixed_n1600, 2026-10-23). Keep them on the mount.
+export WANDB_DIR=/mnt/ami-training/andy
+export WANDB_CACHE_DIR=/mnt/ami-training/andy/.cache/wandb
+export WANDB_DATA_DIR=/mnt/ami-training/andy/.cache/wandb-data
+export WANDB_ARTIFACT_DIR=/mnt/ami-training/andy/.cache/wandb-artifacts

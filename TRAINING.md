@@ -135,7 +135,12 @@ each image's split, is identical, so results are comparable on the shared photos
    above conf 0.001. On sticky cards with 1,000+ insects that is about 30k candidates, and rotated NMS's IoU matrix
    needs ~3.5 GB, so training crashed in `batch_probiou`. Fix: `--val-conf 0.01` (new flag). To rescue a crashed run,
    set `train_args['conf'] = 0.01` inside `last.pt` and `--resume` (resume ignores command-line args).
-8. **`lr0` is ignored.** `train_yolo_obb.py`'s `lr0=0.005` is ignored because `optimizer=auto` (it picks SGD lr 0.01 for long runs).
+8. **W&B fills the root disk.** W&B copies model files into `~/.local/share/wandb` (and caches in `~/.cache/wandb`) before
+   uploading. On the 20 GB root disk that ran out of space at the very end of `mixed_n1600`, after training, so the ONNX export
+   and energy report were skipped. Fix: the `WANDB_*_DIR` exports in `env.sh` keep everything on the mount. To recover a run,
+   export ONNX with `yolo export model=…/best.pt format=onnx imgsz=1600 max_det=3000`, then reattach to the W&B run with
+   `wandb.init(id=…, resume="must")` to add the model and energy.
+9. **`lr0` is ignored.** `train_yolo_obb.py`'s `lr0=0.005` is ignored because `optimizer=auto` (it picks SGD lr 0.01 for long runs).
    This was also true for MBD-1-1.
 
 ## Commands

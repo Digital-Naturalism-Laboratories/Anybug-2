@@ -1,0 +1,163 @@
+[
+ {
+  "subset": "abram2023",
+  "short_name": "ABR",
+  "doi": "10.5281/zenodo.13992282",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Abram, Paul"
+ },
+ {
+  "subset": "ALUS",
+  "short_name": "ALU",
+  "doi": "10.5281/zenodo.13919486",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; deWaard, Jeremy; Fryxell, John; Schneider, Stefan"
+ },
+ {
+  "subset": "amarathunga2022",
+  "short_name": "AMA",
+  "doi": "10.5281/zenodo.13919602",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Amarathunga, Don Chathurika Kshanthi; Dorin, Alan; Grundy, John; Ratnayake, Malika Nisal"
+ },
+ {
+  "subset": "AMI-traps",
+  "short_name": "AMI",
+  "doi": "10.5281/zenodo.13991167",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Pinoy, Nathan; Hoye, Toke T."
+ },
+ {
+  "subset": "AMT",
+  "short_name": "AMT",
+  "doi": "10.5281/zenodo.13991268",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "anTraX",
+  "short_name": "ATX",
+  "doi": "10.5281/zenodo.13919641",
+  "license": "cc-by-4.0",
+  "creators": "Quentin, Geissmann"
+ },
+ {
+  "subset": "ArTaxOr",
+  "short_name": "ATO",
+  "doi": "10.5281/zenodo.13919717",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "biodiscover-arm",
+  "short_name": "BDA",
+  "doi": "10.5281/zenodo.13992340",
+  "license": "cc-by-4.0",
+  "creators": "Andersen, Hans J\u00f8rgen; Geissmann, Quentin; Hoye, Toke T."
+ },
+ {
+  "subset": "BIOSCAN",
+  "short_name": "BIS",
+  "doi": "10.5281/zenodo.13920322",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "cao2022",
+  "short_name": "CAO",
+  "doi": "10.5281/zenodo.13920372",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Cao, Xiaoyan"
+ },
+ {
+  "subset": "CollembolAI",
+  "short_name": "CAI",
+  "doi": "10.5281/zenodo.13920408",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "Diopsis",
+  "short_name": "DPS",
+  "doi": "10.5281/zenodo.13991200",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "DIRT",
+  "short_name": "DIR",
+  "doi": "10.5281/zenodo.13992477",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Kalamatianos, Romanos; Karydis, Ioannis; Doukakis, Dimitris; Avlonitis, Markos"
+ },
+ {
+  "subset": "DiversityScanner",
+  "short_name": "DIS",
+  "doi": "10.5281/zenodo.13929922",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; W\u00fchrl, Lorenz"
+ },
+ {
+  "subset": "gernat2018",
+  "short_name": "GER",
+  "doi": "10.5281/zenodo.13991237",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Gernat, Tim; Robinson, Gene E."
+ },
+ {
+  "subset": "Mothitor",
+  "short_name": "MOI",
+  "doi": "10.5281/zenodo.13992498",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Abarca, Mariana; Frank Bolton, Pablo"
+ },
+ {
+  "subset": "NHM-beetles-crops",
+  "short_name": "NBC",
+  "doi": "10.5281/zenodo.13991316",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "PeMaToEuroPep",
+  "short_name": "PME",
+  "doi": "10.5281/zenodo.13930055",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "pinoy2023",
+  "short_name": "PIN",
+  "doi": "10.5281/zenodo.13992379",
+  "license": "cc-by-4.0",
+  "creators": "Pinoy, Nathan; Ong, Song-Quan; Hoye, Toke T."
+ },
+ {
+  "subset": "sittinger2023",
+  "short_name": "SIT",
+  "doi": "10.5281/zenodo.13920464",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Sittinger, Maximilian"
+ },
+ {
+  "subset": "sticky-pi",
+  "short_name": "SPI",
+  "doi": "10.5281/zenodo.11366139",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin"
+ },
+ {
+  "subset": "ubc-pitfall-traps",
+  "short_name": "UPT",
+  "doi": "10.5281/zenodo.13992496",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Chavez Molina, Nisa Luise; Carrillo, Juli; Chevalier, Daphne"
+ },
+ {
+  "subset": "ubc-scanned-sticky-cards",
+  "short_name": "USC",
+  "doi": "10.5281/zenodo.13992488",
+  "license": "cc-by-4.0",
+  "creators": "Geissmann, Quentin; Chavez Molina, Nisa Luise; Carrillo, Juli"
+ }
+]
